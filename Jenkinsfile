@@ -6,19 +6,31 @@ pipeline{
         password(name: 'exportRole')
         password(name: 'kms')
     }
-    stage('Build Env'){
-    sh label: '', script: '''
-    echo ASSUME_ROLE=${snapRole} >> .env
-    echo EXPORT_ROLE=${exportRole} >> .env
-    echo KMS_KEY=${kms} >> .env
-    dan seterusnya
-    '''
-    }
-    stage('test Py'){
-      sh "/Users/RichardMatthew/miniconda3/bin/python3 env-test.py"
-    }
+    stages {
+        stage('Build Env'){
+            steps{
+                sh label: '', script: '''
+                echo ASSUME_ROLE=${snapRole} >> .env
+                echo EXPORT_ROLE=${exportRole} >> .env
+                echo KMS_KEY=${kms} >> .env
+                '''
+            }
+        
+        }
+        stage('test Py'){
+            steps {
+                sh "/Users/RichardMatthew/miniconda3/bin/python3 env-test.py"
+            }
+        
+        }
 
-    stage('clean up'){
-      sh "rm .env"
+        stage('clean up'){
+            steps {
+                sh "rm .env"
+            }
+        
+        }
+
     }
+    
 }
